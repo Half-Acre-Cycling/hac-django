@@ -10,18 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from email.policy import default
 from pathlib import Path
 import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env in the root of the project
+root = environ.Path(__file__) - 3  # get root of the project
+env = environ.Env()
+environ.Env.read_env()  # reading .env file
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gsrgn!=spqay#c-gp@3#rt2v_s)k$8y3y$dy027o6cn(_6m+v8'
+SECRET_KEY = env.str("SECRET_KEY", default='really_super_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
