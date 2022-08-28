@@ -3,13 +3,13 @@ from django.forms.models import model_to_dict
 
 class Athlete(models.Model):
     usac_number = models.TextField(blank=True, default="")
-    bib_number = models.TextField()
-    name = models.TextField()
-    category_name = models.TextField()
+    bib_number = models.TextField(blank=True, default="")
+    name = models.TextField(blank=True, default="")
+    team = models.TextField(blank=True, default="")
     year = models.TextField(default="2022")
 
     def __str__(self):
-        return self.bib_number
+        return f'{self.bib_number} {self.name}'.strip()
 
     def serialize(self):
         return model_to_dict(self)
@@ -23,6 +23,9 @@ class Category(models.Model):
     athletes = models.ManyToManyField(Athlete, blank=True)
     title = models.TextField()
     year = models.TextField(default="2022")
+
+    class Meta:
+        verbose_name_plural = "categories"
 
     def __str__(self):
         return self.title
