@@ -1,8 +1,9 @@
 import os
+from unicodedata import category
 from django.test import TestCase
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from eliminator.models import Category, Athlete
+from eliminator.models import Category, Athlete, Round, Race
 from django.conf import settings
 from eliminator.utils.data_utils import create_data_from_csv
 
@@ -60,4 +61,23 @@ class SetupData(TestCase):
         test_category = Category.objects.get(title='test_category')
         self.assertGreater(test_category.athletes.all().count(), 0)
 
-    
+    def test_athletes_assigned_to_seed_round(self):
+        test_category = Category.objects.get(title='test_category')
+        seed_round = Round.objects.get(title='Seed', category=test_category)
+        seed_races = Race.objects.filter(round=seed_round)
+        print('Test to ensure that category generation resulted in at least one seed race')
+        self.assertGreater(seed_races.count(), 0)
+        athlete_count_from_category = test_category.athletes.all().count()
+        athlete_count_from_races = 0
+        for race in seed_races:
+            this_race_athlete_count = race.athletes.all().count()
+            athlete_count_from_races += this_race_athlete_count
+        print('Test to ensure that number of athletes in seed race matches number of athletes in category')
+        self.assertEqual(athlete_count_from_category, athlete_count_from_races)
+        print('Test to ensure each athlete only exists once in each seed race')
+        athlete_ids = []
+        for race in seed_races:
+            for athlete in race.athletes.all():
+                athlete_id = athlete.serialize()['id']
+                self.assertFalse(athlete_id in athlete_ids)
+                athlete_ids.append(athlete_id)
