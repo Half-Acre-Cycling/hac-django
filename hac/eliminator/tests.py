@@ -1,4 +1,4 @@
-import os
+import os, json
 from unicodedata import category
 from django.test import TestCase
 # from django.contrib.auth.models import User
@@ -84,11 +84,14 @@ class SetupData(TestCase):
 
     def test_update_athlete(self):
         User = get_user_model()
+        bad_response = self.client.post('/athletes/1', {'bib_number': '123456'})
+        self.assertEqual(bad_response.status_code, 302)
         User.objects.create_user('my-user-name', email='foo@bar.com', password='password', is_staff=True)
         self.assertTrue(self.client.login(username='my-user-name', password='password'))
-        bad_response = self.client.post('/athlete/update/')
-        self.assertEqual(bad_response.status_code, 400)
-        response = self.client.post('/athlete/update/', {'athlete_id': 1, 'bib_number': '987654'})
-
-        print(response.status_code)
-
+        get_response = self.client.get('/athletes/1')
+        test_athlete_usac_number = json.loads(get_response.content)['usac_number']
+        self.assertEqual(test_athlete_usac_number, '5')
+        new_value = '987654'
+        update_response = self.client.put('/athletes/1', {'bib_number': new_value}, content_type='application/json')
+        self.assertEqual(update_response.status_code, 200)
+        self.assertEqual(new_value, Athlete.objects.get(id=1).serialize()['bib_number'])
