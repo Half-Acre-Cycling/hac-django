@@ -15,3 +15,7 @@ def upload_page(request):
             
     form = CategoryUploadForm()
     return render(request, 'upload.html', {'form': form})
+
+def root_page(request):
+    user = request.user
+    return render(request, 'index.html', {'user': user})
