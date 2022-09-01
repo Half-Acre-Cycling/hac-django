@@ -81,3 +81,14 @@ class SetupData(TestCase):
                 athlete_id = athlete.serialize()['id']
                 self.assertFalse(athlete_id in athlete_ids)
                 athlete_ids.append(athlete_id)
+
+    def test_update_athlete(self):
+        User = get_user_model()
+        User.objects.create_user('my-user-name', email='foo@bar.com', password='password', is_staff=True)
+        self.assertTrue(self.client.login(username='my-user-name', password='password'))
+        bad_response = self.client.post('/athlete/update/')
+        self.assertEqual(bad_response.status_code, 400)
+        response = self.client.post('/athlete/update/', {'athlete_id': 1, 'bib_number': '987654'})
+
+        print(response.status_code)
+
