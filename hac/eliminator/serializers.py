@@ -38,3 +38,44 @@ class AthleteSerializer(serializers.ModelSerializer):
             'team',
             'year'
         ]
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = [
+            'id',
+            'title',
+            'athletes',
+            'year'
+        ]
+
+class RoundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Round
+        fields = [
+            'id',
+            'title',
+            'year',
+            'category'
+        ]
+
+class RaceResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RaceResult
+        fields = [
+            'id',
+            'athlete',
+            'place'
+        ]
+
+class RaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RaceResult
+        fields = [
+            'id',
+            'title',
+            'year',
+            'round',
+            'athletes',
+            'places'
+        ]
