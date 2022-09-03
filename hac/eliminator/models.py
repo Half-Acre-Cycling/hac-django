@@ -107,7 +107,7 @@ class RaceResult(models.Model):
     is_placing = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.place
+        return f'{self.athlete} {self.place}'
 
     def serialize(self):
         return model_to_dict(self)

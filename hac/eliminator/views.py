@@ -83,6 +83,12 @@ def races_detail(request, category_id, round_id, pk):
 
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def race_scoring(request, category_id, round_id, pk):
+    if request.method == 'POST':
+        result = RaceResult.objects.get(id=request.POST['id'])
+        place = request.POST['place']
+        result.place = place
+        result.is_placing = place.isdigit()
+        result.save()
     this_category = Category.objects.get(id=category_id).serialize()
     this_round = Round.objects.get(id=round_id).serialize()
     this_race_obj = Race.objects.get(id=pk)
@@ -252,9 +258,10 @@ def race_result_list(request):
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
-@csrf_exempt
+
 @api_view(['GET', 'PUT', 'DELETE'])
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+@csrf_exempt
 def race_result_detail(request, pk):
     try:
         race_result = RaceResult.objects.get(pk=pk)

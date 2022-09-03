@@ -65,8 +65,9 @@ class RaceResultSerializer(serializers.ModelSerializer):
         model = RaceResult
         fields = [
             'id',
-            'athlete',
-            'place'
+            # 'athlete',
+            'place',
+            'is_placing'
         ]
 
 class RaceSerializer(serializers.ModelSerializer):
