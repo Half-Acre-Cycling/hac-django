@@ -36,7 +36,8 @@ class AthleteSerializer(serializers.ModelSerializer):
             'bib_number',
             'name',
             'team',
-            'year'
+            'year',
+            'category'
         ]
 
 class CategorySerializer(serializers.ModelSerializer):

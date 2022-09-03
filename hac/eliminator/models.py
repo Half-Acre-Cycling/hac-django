@@ -7,7 +7,8 @@ class Athlete(models.Model):
     name = models.TextField(blank=True, default="")
     team = models.TextField(blank=True, default="")
     year = models.TextField(default="2022")
-
+    rider_category = models.TextField(blank=True, default="")
+    
     def __str__(self):
         return f'{self.bib_number} {self.name}'.strip()
 
@@ -45,7 +46,7 @@ class Round(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return f'{self.category.title} {self.title}'
 
     def serialize(self):
         return model_to_dict(self)

@@ -1,4 +1,4 @@
-from curses.ascii import HT
+from datetime import date
 from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -28,6 +28,41 @@ def upload_page(request):
 def root_page(request):
     user = request.user
     return render(request, 'index.html', {'user': user})
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def categories(request):
+    current_categories = Category.objects.filter(year=date.today().year)
+    category_data = []
+    for category_query_obj in current_categories:
+        category = category_query_obj.serialize()
+        athlete_count = category_query_obj.athletes.all().count()
+        category_data.append({
+            'id': category['id'],
+            'title': category['title'],
+            'athlete_count': athlete_count
+        })
+    return render(request, 'categories.html', {'category_data': category_data})
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def categories_detail(request, pk):
+    this_category = Category.objects.get(id=pk)
+    athletes = this_category.athletes.all()
+    athlete_count = athletes.count()
+    category = this_category.serialize()
+    category_datum = {
+        'id': category['id'],
+        'title': category['title'],
+        'athlete_count': athlete_count,
+        'year': category['year']
+    }
+    athlete_data = []
+    for athlete_obj in athletes:
+        athlete_data.append(athlete_obj.serialize())
+    round_data = []
+    rounds = Round.objects.filter(category=this_category)
+    for round in rounds:
+        round_data.append(round.serialize())
+    return render(request, 'categories_detail.html', {'category_datum': category_datum, 'athlete_data': athlete_data, 'round_data': round_data})
 
 """
 Athletes

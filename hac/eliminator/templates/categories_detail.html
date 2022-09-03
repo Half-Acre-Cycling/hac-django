@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %}Eliminator Categories{% endblock title %}
+{% block content %}
+<main>
+    <h1>Half Acre Cycling</h1>
+    <h3>{{category_datum.year}} {{ category_datum.title }} -- {{category_datum.athlete_count}} participants</h3>
+    <table>
+        <tr>
+            <th>Bib Number</th>
+            <th>USAC Number</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Category</th>
+        </tr>
+        {% for athlete in athlete_data %}
+            <tr>
+                <th>{{athlete.bib_number}}</th>
+                <th>{{athlete.usac_number}}</th>
+                <th><a href="/athletes/{{ athlete.id }}">{{athlete.name}}</a></th>
+                <th>{{athlete.team}}</th>
+                <th>{{athlete.rider_category}}</th>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>Rounds:</h3>
+    <ul class="category_list">
+        {% for round in round_data %}
+            <li><a href="/categories/{{ category_datum.id }}/round/{{ round.id }}">{{ category_datum.title }} {{ round.title }} Round</a></li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

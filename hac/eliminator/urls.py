@@ -7,6 +7,8 @@ app_name = "eliminator"
 urlpatterns = [
     path('upload/', views.upload_page, name="upload_page"),
     path('', views.root_page, name="root_page"),
+    path('categories/', views.categories, name='categories'),
+    path('categories/<int:pk>', views.categories_detail, name='categories_detail'),
     # DRF API Views
     path('api/athletes/', views.athlete_list, name="athlete_list"),
     path('api/athletes/<int:pk>', views.athlete_detail, name="athlete_detail"),
