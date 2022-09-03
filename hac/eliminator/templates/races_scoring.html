@@ -14,7 +14,7 @@
         {% if race_result.is_placing %}
         <li>
             <div>
-                <p>{{ race_result.athlete.name }}</p>
+                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
@@ -33,7 +33,7 @@
         {% if race_result.place == '' %}
             <li>
                 <div>
-                    <p>{{ race_result.athlete.name }}</p>
+                    <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
                     <form action="" method="POST">
                         {% csrf_token %}
                         <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
@@ -52,7 +52,7 @@
         {% if race_result.place == 'dns' %}
         <li>
             <div>
-                <p>{{ race_result.athlete.name }}</p>
+                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
@@ -71,7 +71,7 @@
         {% if race_result.place == 'dnf' %}
         <li>
             <div>
-                <p>{{ race_result.athlete.name }}</p>
+                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
@@ -90,7 +90,7 @@
         {% if race_result.place == 'dq' %}
         <li>
             <div>
-                <p>{{ race_result.athlete.name }}</p>
+                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
                 <form action="" method="POST">
                     {% csrf_token %}
                     <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">

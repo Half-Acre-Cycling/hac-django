@@ -1,3 +1,4 @@
+from unicodedata import category
 import pandas as pd
 from datetime import date
 from eliminator.models import Category, Athlete, RaceResult, Round, Race
@@ -70,7 +71,7 @@ def create_data_from_csv(file, category_name):
     for index, row in df.iterrows():
         # Create a new Athlete
         athlete_obj = Athlete.objects.create(**{
-            "usac_number": '',
+            "usac_number": row['USAC License'],
             "bib_number": row['Bib'],
             "name": ' '.join([row['First Name'], row['Last Name']]),
             "team": row["Team"],
@@ -681,15 +682,15 @@ def generate_final(category_obj, elim_round):
                 pass
     
 def generate_final_32(category_obj):
-    round = Round.objects.get(categoy=category_obj, title="Elimination 2", year=date.today().year)
+    round = Round.objects.get(category=category_obj, title="Elimination 2", year=date.today().year)
     generate_final(category_obj, round)
 
 def generate_final_16(category_obj):
-    round = Round.objects.get(categoy=category_obj, title="Elimination", year=date.today().year)
+    round = Round.objects.get(category=category_obj, title="Elimination", year=date.today().year)
     generate_final(category_obj, round)
 
 def generate_petit_final_32(category_obj):
-    comeback_round = Round.objects.get(categoy=category_obj, title="Comeback", year=date.today().year)
+    comeback_round = Round.objects.get(category=category_obj, title="Comeback", year=date.today().year)
     petit_round = Round.objects.create(**{
         "title": "Small Final",
         "year": date.today().year,
