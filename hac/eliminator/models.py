@@ -1,3 +1,5 @@
+from pickle import FALSE
+from tkinter import CASCADE
 from django.db import models
 from django.forms.models import model_to_dict
 
@@ -55,12 +57,29 @@ class Round(models.Model):
         self.full_clean()
 
         super().save(*args, **kwargs)
+class Race(models.Model):
+    title = models.TextField()
+    year = models.TextField(default="2022")
+    round = models.ForeignKey(Round, on_delete=models.CASCADE)
+    athletes = models.ManyToManyField(Athlete, blank=True)
 
+    def __str__(self):
+        return self.title
+
+    def serialize(self):
+        return model_to_dict(self)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+
+        super().save(*args, **kwargs)
 class RaceResult(models.Model):
     places = {
         ("", "----"),
         ("dns", "Did Not Start"),
         ("dnf", "Did Not Finish"),
+        ("dq", "Disqualified"),
+        ("dnp", "Did Not Place"),
         ("1", "First"),
         ("2", "Second"),
         ("3", "Third"),
@@ -84,27 +103,11 @@ class RaceResult(models.Model):
     }
     athlete = models.ForeignKey(Athlete, on_delete=models.CASCADE)
     place = models.TextField(default="", choices=places, blank=True)
+    race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    is_placing = models.BooleanField(default=False)
 
     def __str__(self):
         return self.place
-
-    def serialize(self):
-        return model_to_dict(self)
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-
-        super().save(*args, **kwargs)
-
-class Race(models.Model):
-    title = models.TextField()
-    year = models.TextField(default="2022")
-    round = models.ForeignKey(Round, on_delete=models.CASCADE)
-    athletes = models.ManyToManyField(Athlete, blank=True)
-    places = models.ManyToManyField(RaceResult, blank=True)
-
-    def __str__(self):
-        return self.title
 
     def serialize(self):
         return model_to_dict(self)

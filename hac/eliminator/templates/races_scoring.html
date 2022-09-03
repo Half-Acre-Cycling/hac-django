@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+{% block title %}Eliminator Races{% endblock title %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.3/lib/draggable.bundle.js"></script>
+<main>
+    <h1>Half Acre Cycling</h1>
+    <h3>{{ category.title }} {{round.title}} {{ race.title }}</h3>
+    <a href="/categories/{{category.id}}/round/{{round.id}}">Back to Round</a>
+    <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}">Back to Race Summary</a>
+    <!-- <script>
+const containers = document.querySelectorAll('.block')
+
+const droppable = new Draggable.Droppable(containers, {
+    draggable: '.draggable',
+    droppable: '.droppable'
+});
+
+droppable.on('drag:start', () => console.log('drag:start'));
+droppable.on('droppable:over', () => console.log('droppable:over'));
+droppable.on('droppable:out', () => console.log('droppable:out'));
+    </script> -->
+    <style>
+        .lis-group-item {
+  display: inline-block;
+  font-family: 'Apercu Mono';
+  font-weight: 700;
+  padding: 20px;
+  border: 1px solid;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: darksalmon;
+}
+
+.draggable-container--is-dragging {
+  user-select: none;
+}
+
+.draggable-source--placed {
+  background-color: bisque;
+}
+
+.draggable-source--is-dragging {
+  background-color: white;
+}
+
+.lis-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+    </style>
+    <div id="root">
+        <ul class="lis-group">
+          <li class="lis-group-item draggable">1</li>
+          <li class="lis-group-item draggable">2</li>
+          <li class="lis-group-item draggable">3</li>
+          <li class="lis-group-item draggable">4</li>
+          <li class="lis-group-item draggable">5</li>
+          <li class="lis-group-item draggable">6</li>
+          <li class="lis-group-item draggable">7</li>
+          <li class="lis-group-item draggable">8</li>
+        </ul>
+      </div>
+      <script>
+        
+        const drag = new Draggable.Sortable(document.querySelectorAll('#root'), {
+  draggable: 'li'
+});
+
+drag.on('snap:in', () => console.log('snap:in'));
+drag.on('snap:out', () => console.log('snap:out'));
+
+document.ontouchmove = function(event) {
+  event.preventDefault();
+};
+      </script>
+    
+    <ul class="race_list">
+        {% for athlete in race.athletes %}
+        <li>
+            <strong>Bib {{athlete.bib_number}}</strong><span> -- {{athlete.name}}{% if athlete.team %}, {{athlete.team}} {% endif %}</span><strong>Place: ______________</strong>
+        </li>
+        {% endfor %}
+    </ul>
+    <!-- placed results -->
+    <h6>Placing Results</h6>
+    <ul class="race-list">
+        {% for race_result in race_results %}
+        {% if race_result.is_placing %}
+            <li>{{ race_result.athlete.name }}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <!-- unplaced results -->
+    <h6>Unplaced Results</h6>
+    <ul class="race-list">
+        {% for race_result in race_results %}
+        {% if race_result.place == '' %}
+            <li>{{ race_result.athlete.name }}</li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    <!-- DNS -->
+    <h6>Did Not Start</h6>
+    <!-- DNF -->
+    <h6>Did Not Finish</h6>
+    <!-- DQ -->
+    <h6>Disqualified</h6>
+    <!-- DNP -->
+    <h6>Did Not Place</h6>
+
+</main>
+{% endblock %}
