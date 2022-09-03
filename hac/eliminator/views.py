@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.views.decorators.http import require_http_methods
 from .forms import CategoryUploadForm
-from eliminator.utils.data_utils import create_data_from_csv
+from eliminator.utils import data_utils
 from eliminator.models import Athlete, Category, Race, Round, RaceResult
 from eliminator.serializers import AthleteSerializer, CategorySerializer, RaceResultSerializer, RaceSerializer, RoundSerializer
 
@@ -19,7 +19,7 @@ def upload_page(request):
     if request.method == 'POST':
         form = CategoryUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            create_data_from_csv(request.FILES['file'], request.POST['category_name'])
+            data_utils.create_data_from_csv(request.FILES['file'], request.POST['category_name'])
             
     form = CategoryUploadForm()
     return render(request, 'upload.html', {'form': form})
@@ -102,6 +102,42 @@ def race_scoring(request, category_id, round_id, pk):
         )
         race_results.append(race_result)
     return render(request, 'races_scoring.html', {'round': this_round, 'race': this_race, 'category': this_category, 'race_results': race_results})
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def generate_first_elim(request, category_id):
+    category = Category.objects.get(id=category_id)
+    data_utils.generate_first_elimination_rounds(category)
+    return redirect(f'/categories/{category_id}')
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def generate_second_elim(request, category_id):
+    category = Category.objects.get(id=category_id)
+    data_utils.generate_second_elimination_rounds(category)
+    return redirect(f'/categories/{category_id}')
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def generate_comeback(request, category_id):
+    category = Category.objects.get(id=category_id)
+    data_utils.generate_comeback_rounds(category)
+    return redirect(f'/categories/{category_id}')
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def generate_final(request, category_id, size):
+    category = Category.objects.get(id=category_id)
+    if size == '16':
+        data_utils.generate_final_16(category)
+    else:
+        data_utils.generate_final_32(category)
+    return redirect(f'/categories/{category_id}')
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def generate_petit(request, category_id, size):
+    category = Category.objects.get(id=category_id)
+    if size == '16':
+        data_utils.generate_petit_final_16(category)
+    else:
+        data_utils.generate_petit_final_32(category)
+    return redirect(f'/categories/{category_id}')
 
 """
 DRF Views

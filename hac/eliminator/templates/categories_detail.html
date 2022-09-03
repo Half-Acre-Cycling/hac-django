@@ -16,7 +16,7 @@
             <tr>
                 <th>{{athlete.bib_number}}</th>
                 <th>{{athlete.usac_number}}</th>
-                <th><a href="/athletes/{{ athlete.id }}">{{athlete.name}}</a></th>
+                <th><a href="/admin/eliminator/athlete/{{ athlete.id }}/change/">{{athlete.name}}</a></th>
                 <th>{{athlete.team}}</th>
                 <th>{{athlete.rider_category}}</th>
             </tr>
@@ -28,5 +28,13 @@
             <li><a href="/categories/{{ category_datum.id }}/round/{{ round.id }}">{{ category_datum.title }} {{ round.title }} Round</a></li>
         {% endfor %}
     </ul>
+    <br><br><br>
+    <a href="/generate_elim/{{ category_datum.id }}">Generate First Elimination</a><br>
+    <a href="/generate_second_elim/{{ category_datum.id }}">Generate Second Elimination</a><br>
+    <a href="/generate_comeback/{{ category_datum.id }}">Generate Comeback</a><br>
+    <a href="/generate_final/{{ category_datum.id }}/16">Generate Final (16)</a><br>
+    <a href="/generate_final/{{ category_datum.id }}/32">Generate Final (32)</a><br>
+    <a href="/generate_petit/{{ category_datum.id }}/16">Generate Petit Final (16)</a><br>
+    <a href="/generate_petit/{{ category_datum.id }}/32">Generate Petit Final (32)</a>
 </main>
 {% endblock %}

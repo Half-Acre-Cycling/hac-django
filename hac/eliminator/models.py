@@ -64,7 +64,7 @@ class Race(models.Model):
     athletes = models.ManyToManyField(Athlete, blank=True)
 
     def __str__(self):
-        return self.title
+        return f'{self.round} {self.title}'
 
     def serialize(self):
         return model_to_dict(self)

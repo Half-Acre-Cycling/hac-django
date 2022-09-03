@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block title %}Eliminator Races{% endblock title %}
 {% block content %}
+<style>
+    .race_list li {
+        margin: 1em 0;
+    }
+</style>
 <main>
     <h1>Half Acre Cycling</h1>
     <h3>{{ category.title }} {{round.title}} {{ race.title }}</h3>

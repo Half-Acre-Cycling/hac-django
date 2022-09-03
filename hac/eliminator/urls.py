@@ -12,7 +12,11 @@ urlpatterns = [
     path('categories/<int:category_id>/round/<int:pk>', views.rounds_detail, name='rounds_detail'),
     path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>', views.races_detail, name='races_detail'),
     path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>/scoring/', views.race_scoring, name='race_scoring'),
-    
+    path('generate_elim/<int:category_id>', views.generate_first_elim, name='generate_first_elim'),
+    path('generate_second_elim/<int:category_id>', views.generate_second_elim, name='generate_second_elim'),
+    path('generate_comeback/<int:category_id>', views.generate_comeback, name='generate_comeback'),
+    path('generate_final/<int:category_id>/<int:size>', views.generate_final, name='generate_final'),
+    path('generate_petit/<int:category_id>/<int:size>', views.generate_petit, name='generate_petit'),
     # DRF API Views
     path('api/athletes/', views.athlete_list, name="athlete_list"),
     path('api/athletes/<int:pk>', views.athlete_detail, name="athlete_detail"),
