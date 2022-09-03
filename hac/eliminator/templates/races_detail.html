@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block title %}Eliminator Races{% endblock title %}
+{% block content %}
+<main>
+    <h1>Half Acre Cycling</h1>
+    <h3>{{ category.title }} {{round.title}} {{ race.title }}</h3>
+    <a href="/categories/{{category.id}}/round/{{round.id}}">Back to Round</a>
+    <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}/scoring">Enter Scoring</a>
+    <ul class="race_list">
+        {% for athlete in race.athletes %}
+        <li>
+            <strong>Bib {{athlete.bib_number}}</strong><span> -- {{athlete.name}}{% if athlete.team %}, {{athlete.team}} {% endif %}</span><strong>Place: ______________</strong>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

@@ -9,6 +9,9 @@ urlpatterns = [
     path('', views.root_page, name="root_page"),
     path('categories/', views.categories, name='categories'),
     path('categories/<int:pk>', views.categories_detail, name='categories_detail'),
+    # http://localhost:8000/categories/12/round/1
+    path('categories/<int:category_id>/round/<int:pk>', views.rounds_detail, name='rounds_detail'),
+    path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>', views.races_detail, name='races_detail'),
     # DRF API Views
     path('api/athletes/', views.athlete_list, name="athlete_list"),
     path('api/athletes/<int:pk>', views.athlete_detail, name="athlete_detail"),

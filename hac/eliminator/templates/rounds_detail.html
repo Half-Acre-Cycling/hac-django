@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block title %}Eliminator Rounds{% endblock title %}
+{% block content %}
+<main>
+    <h1>Half Acre Cycling</h1>
+    <h3>{{ category.title }} {{round.title}} races</h3>
+    <a href="/categories/{{category.id}}">Back to Category</a>
+    <ul class="race_container">
+        {% for race in race_data %}
+        <li>
+            <div>
+                <h6><a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}">{{ category.title }} {{round.title}} {{ race.title }}</a></h6>
+                <ul>
+                    {% for athlete in race.athletes %}
+                    <li>{{athlete.name}} - bib {{athlete.bib_number}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

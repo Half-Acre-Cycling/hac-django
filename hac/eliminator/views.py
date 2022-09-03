@@ -64,6 +64,22 @@ def categories_detail(request, pk):
         round_data.append(round.serialize())
     return render(request, 'categories_detail.html', {'category_datum': category_datum, 'athlete_data': athlete_data, 'round_data': round_data})
 
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def rounds_detail(request, category_id, pk):
+    this_category = Category.objects.get(id=category_id).serialize()
+    this_round = Round.objects.get(id=pk)
+    races = Race.objects.filter(round=this_round)
+    race_data = []
+    for race in races:
+        race_data.append(race.serialize())
+    return render(request, 'rounds_detail.html', {'round': this_round.serialize(), 'race_data': race_data, 'category': this_category})
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def races_detail(request, category_id, round_id, pk):
+    this_category = Category.objects.get(id=category_id).serialize()
+    this_round = Round.objects.get(id=round_id).serialize()
+    this_race = Race.objects.get(id=pk).serialize()
+    return render(request, 'races_detail.html', {'round': this_round, 'race': this_race, 'category': this_category})
 """
 Athletes
 """
