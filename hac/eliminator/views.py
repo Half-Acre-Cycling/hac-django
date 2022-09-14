@@ -1,10 +1,13 @@
 from datetime import date
+import openpyxl
+import pandas as pd
+import io
 from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.decorators import api_view
 # from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.views.decorators.http import require_http_methods
@@ -138,6 +141,192 @@ def generate_petit(request, category_id, size):
     else:
         data_utils.generate_petit_final_32(category)
     return redirect(f'/categories/{category_id}')
+
+def build_result_return_data(athlete, place, category):
+    """
+    utiltiy function that returns a dict in a format that we
+    expect for results placing
+    overall category placing can differ from what the place in
+    """
+    average_points = get_average_points_of_athlete(athlete, category)
+    return {
+        "id": athlete.id, # only used to detect if a rider has already been placed
+        "name": athlete.name,
+        "usac_number": athlete.usac_number,
+        "bib_number": athlete.bib_number,
+        "team": athlete.team,
+        "place": place,
+        'average_points': average_points
+    }
+
+def get_average_points_of_athlete(athlete, category):
+    points_map = {
+        '1': 13,
+        '2': 10,
+        '3': 7,
+        '4': 5,
+        '5': 3,
+        '6': 2,
+        '7': 1,
+        '8': 0
+    }
+    """
+    In an eight person race, points will be assigned as 13, 10, 7, 5, 3, 2, 1, 0
+    average points determined by total points divided by number of races entered
+    """
+    rounds = Round.objects.filter(category=category).exclude(title='Seed')
+    races_count = 0
+    total_points = 0
+    for event_round in rounds:
+        races = Race.objects.filter(round=event_round)
+        for race in races:
+            race_obj = race.serialize()
+            if athlete in race_obj['athletes']:
+                try:
+                    result = RaceResult.objects.get(athlete=athlete, race=race).serialize()
+                    if result['is_placing']:
+                        races_count += 1
+                        place = result['place']
+                        if place in points_map.keys():
+                            total_points += points_map[place]
+                except RaceResult.DoesNotExist:
+                    pass
+    average_points = round(total_points / races_count, 2)
+    return average_points
+
+
+
+def determined_if_athlete_did_not_place(athlete, category):
+    rounds = Round.objects.filter(category=category)
+    athlete_is_placing = True
+    latest_non_placing_reason = '' # there should only be one non-placing reason, but programmatically we're just getting the last
+    for round in rounds:
+        races = Race.objects.filter(round=round)
+        for race in races:
+            try:
+                result = RaceResult.objects.get(athlete=athlete, race=race).serialize()
+                if not result['is_placing']:
+                    athlete_is_placing = False
+                    latest_non_placing_reason = result['place']
+            except RaceResult.DoesNotExist:
+                pass
+    return {
+        'is_placing': athlete_is_placing,
+        'reason': latest_non_placing_reason
+    }
+
+
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
+def retrieve_results(request, year):
+    """
+    How to create results:
+    Generate a single CSV which is delimited by Category
+    Headers are to be:
+    - Athlete Name
+    - Athlete USAC Number
+    - Athlete Bib Number
+    - Athlete Team
+    - Place
+    - Average Points
+    For a given year, iterate over all categories
+    First populate top riders by placing from the Final.
+    Then populate top riders by placing them from the Petit Final.
+    Then see what riders were not placed. 
+    If any race one of the riders was in had a non-placing result,
+    the rider shall not be placed.
+    For all other racers
+
+    """
+    categories = Category.objects.filter(year=year)
+    output_data = []
+    # For a given year, iterate over all categories
+    for category in categories:
+        category_obj = category.serialize()
+        computed_riders_unsorted = []
+        non_placing_riders_unsorted = []
+        category_data = {
+            'name': category_obj['title'],
+            'placing_riders_sorted': [],
+            'computed_riders_unsorted': [],
+            'non_placing_riders_unsorted': []
+        }
+        # once a rider has been placed, stick them in a list so we know to ignore them
+        rider_ids_resolved = []
+        try:
+            final_round = Round.objects.get(category=category, title='Final')
+        except Round.DoesNotExist:
+            continue
+        final_race = Race.objects.get(round=final_round, title='Final')
+        # max_final_place used since race placing does not equal category placing
+        max_final_place = 0
+        # First populate top riders by placing from the Final.
+        for place_number in range(1,21):
+            place_str = str(place_number)
+            try:
+                result = RaceResult.objects.get(race=final_race, place=place_str)
+                result_datum = build_result_return_data(result.athlete, place_str, category)
+                category_data['placing_riders_sorted'].append(result_datum)
+                rider_ids_resolved.append(result_datum['id'])
+                max_final_place = place_number
+            except RaceResult.DoesNotExist:
+                pass
+        petit_final_round = Round.objects.get(category=category, title='Small Final')
+        petit_final_race = Race.objects.get(round=petit_final_round, title='Small Final')
+        for place_number in range(1,21):
+            place_str = str(place_number)
+            overall_place = str(1 + max_final_place)
+            try:
+                result = RaceResult.objects.get(race=petit_final_race, place=place_str)
+                result_datum = build_result_return_data(result.athlete, overall_place, category)
+                category_data['placing_riders_sorted'].append(result_datum)
+                rider_ids_resolved.append(result_datum['id'])
+                max_final_place = int(overall_place)
+            except RaceResult.DoesNotExist:
+                pass
+        # Now iterate over athletes, and determine if anyone did not place
+        for athlete in category_obj['athletes']:
+            if athlete.id in rider_ids_resolved:
+                continue
+            dnp_result = determined_if_athlete_did_not_place(athlete, category)
+            if not dnp_result['is_placing']:
+                print(f'found unplacing rider {athlete.name}')
+                result_datum = build_result_return_data(athlete, dnp_result['reason'], category)
+                non_placing_riders_unsorted.append(result_datum)
+                rider_ids_resolved.append(athlete.id)
+        for athlete in category_obj['athletes']:
+            if athlete.id in rider_ids_resolved:
+                continue
+            # print(f'attempting to score rider {athlete.name} by points tabulation')
+            average_points = get_average_points_of_athlete(athlete, category)
+            computed_riders_unsorted.append({
+                'id': athlete.id,
+                'points': average_points
+            })
+            rider_ids_resolved.append(athlete.id)
+        computed_riders_sorted = sorted(computed_riders_unsorted, key=lambda d: d['points'], reverse=True)
+        for rider in computed_riders_sorted:
+            athlete = Athlete.objects.get(id=rider['id'])
+            # print(f'attempting to score rider {athlete.name} by points tabulation')
+            new_place = str(len(category_data['placing_riders_sorted']) + 1)
+            result_datum = build_result_return_data(athlete, new_place, category)
+            category_data['placing_riders_sorted'].append(result_datum)
+        for place in non_placing_riders_unsorted:
+            category_data['placing_riders_sorted'].append(place)
+        output_data.append(category_data)
+    # buffer = io.BytesIO()
+    return JsonResponse(output_data, safe=False)
+    with pd.ExcelWriter(
+        buffer
+        # 'output.xslx',
+        # mode="a",
+        # engine="openpyxl",
+        # if_sheet_exists="replace"
+    ) as writer:
+        for datum in output_data:
+            print(datum['name'])
+            df = pd.DataFrame(datum['placing_riders_sorted'])
+            print(df)
+            df.to_excel(writer, sheet_name=output_data['name'], index=False)
 
 """
 DRF Views

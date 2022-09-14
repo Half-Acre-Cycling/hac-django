@@ -17,6 +17,7 @@ urlpatterns = [
     path('generate_comeback/<int:category_id>', views.generate_comeback, name='generate_comeback'),
     path('generate_final/<int:category_id>/<int:size>', views.generate_final, name='generate_final'),
     path('generate_petit/<int:category_id>/<int:size>', views.generate_petit, name='generate_petit'),
+    path('results/csv/<str:year>', views.retrieve_results, name='retrieve_results'),
     # DRF API Views
     path('api/athletes/', views.athlete_list, name="athlete_list"),
     path('api/athletes/<int:pk>', views.athlete_detail, name="athlete_detail"),
