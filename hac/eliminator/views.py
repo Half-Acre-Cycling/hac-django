@@ -270,19 +270,22 @@ def retrieve_results(request, year):
                 max_final_place = place_number
             except RaceResult.DoesNotExist:
                 pass
-        petit_final_round = Round.objects.get(category=category, title='Small Final')
-        petit_final_race = Race.objects.get(round=petit_final_round, title='Small Final')
-        for place_number in range(1,21):
-            place_str = str(place_number)
-            overall_place = str(1 + max_final_place)
-            try:
-                result = RaceResult.objects.get(race=petit_final_race, place=place_str)
-                result_datum = build_result_return_data(result.athlete, overall_place, category)
-                category_data['placing_riders_sorted'].append(result_datum)
-                rider_ids_resolved.append(result_datum['id'])
-                max_final_place = int(overall_place)
-            except RaceResult.DoesNotExist:
-                pass
+        try:
+            petit_final_round = Round.objects.get(category=category, title='Small Final')
+            petit_final_race = Race.objects.get(round=petit_final_round, title='Small Final')
+            for place_number in range(1,21):
+                place_str = str(place_number)
+                overall_place = str(1 + max_final_place)
+                try:
+                    result = RaceResult.objects.get(race=petit_final_race, place=place_str)
+                    result_datum = build_result_return_data(result.athlete, overall_place, category)
+                    category_data['placing_riders_sorted'].append(result_datum)
+                    rider_ids_resolved.append(result_datum['id'])
+                    max_final_place = int(overall_place)
+                except RaceResult.DoesNotExist:
+                    pass
+        except Round.DoesNotExist:
+            pass
         # Now iterate over athletes, and determine if anyone did not place
         for athlete in category_obj['athletes']:
             if athlete.id in rider_ids_resolved:
