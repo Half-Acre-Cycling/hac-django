@@ -191,7 +191,10 @@ def get_average_points_of_athlete(athlete, category):
                             total_points += points_map[place]
                 except RaceResult.DoesNotExist:
                     pass
-    average_points = round(total_points / races_count, 2)
+    try:
+        average_points = round(total_points / races_count, 2)
+    except ZeroDivisionError:
+        average_points = 0
     return average_points
 
 
