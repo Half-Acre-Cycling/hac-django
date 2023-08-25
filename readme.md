@@ -25,3 +25,18 @@ To see more information about how the race is actually run, check out [this docu
 you can always halt the server and collect static again, and run again.
 - if changes are made to the database model, you will likely need to create another migration file and perform that migration.
 - The django admin panel can be accessed at `/admin/`
+
+### Next Steps / Tasks
+- basic mobile-first front end
+- drag racers from one heat to another
+- drag and drop file uploading for CSV data
+- results view
+- unauthenticated racer views
+- auto-play presentation view (in case Jean wants to bring his TV, lol)
+- add approximate start times to races
+- schedule view
+- additional validation for scoring submissions
+- additional validation for next round generation
+- add FAQ as a single page (see third item from documentation on the [eliminator docs](eliminator.md))
+- add individual FAQ elements as tooltips
+- add "bracket" view (oy this hurts my head)
