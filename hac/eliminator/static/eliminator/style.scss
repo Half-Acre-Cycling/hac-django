@@ -1,3 +1,47 @@
+:root {
+    --dark: #191f27;
+    --light: #e8e0d1;
+    --pink: #e3b1a5;
+}
+
 body {
-    background-color: #bada55;
+    // font-family: "Mulish", sans-serif;
+    font-family: "Nunito Sans", sans-serif;
+    // font-family: "Red Hat Display", sans-serif;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+    background-color: var(--dark);
+    color: var(--light);
+    transition: color 0.5s, background-color 0.5s;
+}
+
+main {
+    max-width: 600px;
+    margin: auto;
+}
+.button-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    width: 100%;
+    >* {
+        flex-basis: 40%;
+    }
+}
+.button {
+    display: inline-block;
+    color: color-mix(in srgb, var(--dark), #fff 15%);
+    background-color: var(--pink);
+    padding: 1em;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    margin: .5em 0;
+    &:hover {
+        color: var(--dark);
+        background-color: color-mix(in srgb, var(--pink), #000 15%);
+    }
 }

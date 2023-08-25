@@ -9,6 +9,7 @@ db.sqlite3
 migrations/
 # test shell
 shell.ipynb
+hac/static
 
 # Environments
 .env

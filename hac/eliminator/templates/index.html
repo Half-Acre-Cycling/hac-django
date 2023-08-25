@@ -2,12 +2,15 @@
 {% block title %}Welcome to HAC Eliminator{% endblock title %}
 {% block content %}
 <main>
-    <h1>Half Acre Cycling</h1>
+    <h1>Half Acre Cycling CXE</h1>
+    <h3>Bracket Bot Admin</h3>
     <!-- {% if user %}
     <p>name: {{ user.username }}</p>
     <p>is staff: {{ user.is_staff }}</p>
     {% endif %} -->
-    <a href="/categories/">View Categories</a>
-    <a href="/upload/">Upload a new Category</a>
+    <div class="button-container">
+        <a href="/categories/" class="button">View Categories</a>
+        <a href="/upload/" class="button">Upload a new Category</a>
+    </div>
 </main>
 {% endblock %}
