@@ -25,17 +25,26 @@ main {
 .button-container {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
     >* {
         flex-basis: 40%;
+        display: inline-block;
+        padding: 1em;
+        margin: .5em 0;
+    }
+    label {
+        text-align: right;
+    }
+    input[type=text] {
+        padding: 0 .5em;
+        margin: 1.75em 0;
     }
 }
 .button {
-    display: inline-block;
+    
     color: color-mix(in srgb, var(--dark), #fff 15%);
     background-color: var(--pink);
-    padding: 1em;
     font-weight: bold;
     text-decoration: none;
     text-align: center;
@@ -43,5 +52,71 @@ main {
     &:hover {
         color: var(--dark);
         background-color: color-mix(in srgb, var(--pink), #000 15%);
+    }
+}
+hr {
+    border: 2px solid var(--light);
+    margin-left: 0;
+}
+
+/**
+ * File uploads for categories
+ */
+.file-dropzone {
+    flex-basis: 100%;
+    background: var(--light);
+    border: 2px solid var(--pink);
+    overflow: hidden;
+    min-height: 6em;
+    position: relative;
+    &.ready {
+        background: var(--dark);
+        div {
+            color: var(--light);
+        }
+    }
+    &::after {
+        position: absolute;
+        left: 13px;
+        top: 38px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+    &::before {
+        content: " ";
+        display: inline-block;
+        height: 100%;
+        width: 1%;
+        vertical-align: middle;
+    }
+    div {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 10px;
+        overflow: hidden;
+        word-break: break-all;
+        color: var(--dark)
+    }
+    // add option to wipe input
+    span {
+        position: absolute;
+        font-weight: bold;
+        right: 7.5px;
+        top: -7.5px;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 10;
+        display: none;
+        color: var(--light);
+    }
+    // visually hide the native file input field
+    input {
+        position: absolute;
+        z-index: 3;
+        display: block;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
     }
 }

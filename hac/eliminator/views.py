@@ -20,10 +20,7 @@ from eliminator.serializers import AthleteSerializer, CategorySerializer, RaceRe
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def upload_page(request):
     if request.method == 'POST':
-        form = CategoryUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            data_utils.create_data_from_csv(request.FILES['file'], request.POST['category_name'])
-            
+        data_utils.create_data_from_csv(request.FILES['file'], request.POST['category_name'])
     form = CategoryUploadForm()
     return render(request, 'upload.html', {'form': form})
 

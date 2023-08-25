@@ -3,12 +3,15 @@
 {% block content %}
 <main>
     <h1>Half Acre Cycling</h1>
-    <ul class="category_list">
+    <h3>Categories</h3>
+    <div class="button-container">
         {% for category in category_data %}
-            <li><a href="/categories/{{ category.id }}">{{ category.title }}</a> <span>{{ category.athlete_count }} participants</span></li>
+            <a href="/categories/{{ category.id }}" class="button">{{ category.title }}</a> <p>{{ category.athlete_count }} participants</p>
         {% endfor %}
-    </ul>
-    
-    <a href="/upload/">Upload a new Category</a>
+    </div>
+    <hr>
+    <div class="button-container">
+        <a href="/upload/" class="button">Upload a new Category</a>
+    </div>
 </main>
 {% endblock %}
