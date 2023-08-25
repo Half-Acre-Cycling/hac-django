@@ -4,24 +4,21 @@
 <main>
     <h1>Half Acre Cycling</h1>
     <h3>{{category_datum.year}} {{ category_datum.title }} -- {{category_datum.athlete_count}} participants</h3>
-    <table>
-        <tr>
-            <th>Bib Number</th>
-            <th>USAC Number</th>
-            <th>Name</th>
-            <th>Team</th>
-            <th>Category</th>
-        </tr>
-        {% for athlete in athlete_data %}
-            <tr>
-                <th>{{athlete.bib_number}}</th>
-                <th>{{athlete.usac_number}}</th>
-                <th><a href="/admin/eliminator/athlete/{{ athlete.id }}/change/">{{athlete.name}}</a></th>
-                <th>{{athlete.team}}</th>
-                <th>{{athlete.rider_category}}</th>
-            </tr>
-        {% endfor %}
-    </table>
+    {% for athlete in athlete_data %}
+        <div class="rider unexpanded">
+            <div class="header">{{athlete.bib_number}} - {{athlete.name}}</div>
+            <div class="detail">
+                <small>Update Details Here</small>
+                <p><a href="/admin/eliminator/athlete/{{ athlete.id }}/change/">{{athlete.name}}</a></p>
+                <small>USAC Number</small>
+                <p>{{athlete.usac_number}}</p>
+                <small>Team</small>
+                <p>{{athlete.team}}</p>
+                <small>Category</small>
+                <p>{{athlete.rider_category}}</p>
+            </div>
+        </div>
+    {% endfor %}
     <h3>Rounds:</h3>
     <ul class="category_list">
         {% for round in round_data %}
