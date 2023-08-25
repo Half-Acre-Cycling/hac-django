@@ -101,6 +101,7 @@ hr {
         transition-duration: 1s;
         transition-delay: 0.5s;
         color: var(--dark);
+        z-index: -1;
         a {
             color: var(--dark);
         }
@@ -118,6 +119,7 @@ hr {
         .detail {
             opacity: 1;
             color: var(--light);
+            z-index: initial;
             a {
                 color: var(--pink);
             }
