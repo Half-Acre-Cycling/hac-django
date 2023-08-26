@@ -138,6 +138,12 @@ hr {
 .sort-zone {
     border: 2px solid var(--pink);
     min-height: 4em;
+    .header::after {
+        content: attr(place);
+    }
+    .dragging {
+        background-color: var(--pink);
+    }
 }
 
 /**

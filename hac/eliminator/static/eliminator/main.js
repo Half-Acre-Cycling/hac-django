@@ -35,6 +35,17 @@ const sortableList = (e) => {
             return e.clientY <= rider.offsetTop + rider.offsetHeight / 2;
         });
         zone.insertBefore(draggedRider, nextSiblingRider);
+        if (sortZoneId === 'placing_results') {
+            // assign scoring based on (new) sorting
+            const placingRiders = zone.querySelectorAll('.rider');
+            for (let i = 0; i < placingRiders.length; i++) {
+                const place = i + 1;
+                const header = placingRiders[i].childNodes[1];
+                header.setAttribute('place', place.toString());
+            }
+        } else {
+            draggedRider.childNodes[1].setAttribute('place', '');
+        }
     } catch (er) {
         console.log(er);
     }
