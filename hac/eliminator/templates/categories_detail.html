@@ -5,7 +5,7 @@
     <h1>Half Acre Cycling</h1>
     <h3>{{category_datum.year}} {{ category_datum.title }} -- {{category_datum.athlete_count}} participants</h3>
     {% for athlete in athlete_data %}
-        <div class="rider unexpanded">
+        <div class="rider unexpanded expandable">
             <div class="header">{{athlete.bib_number}} - {{athlete.name}}</div>
             <div class="detail">
                 <small>Update Details Here</small>
