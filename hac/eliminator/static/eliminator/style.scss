@@ -23,6 +23,10 @@ small {
 a {
     color: var(--pink)
 }
+h6 {
+    margin-bottom: 0.25em;
+    color: var(--pink);
+}
 main {
     max-width: 600px;
     margin: auto;
@@ -126,6 +130,14 @@ hr {
         }
         max-height: 16em;
     }
+}
+
+/**
+ * Sort Zone
+ */
+.sort-zone {
+    border: 2px solid var(--pink);
+    min-height: 4em;
 }
 
 /**

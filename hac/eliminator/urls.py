@@ -29,4 +29,5 @@ urlpatterns = [
     path('api/raceresults/<int:pk>', views.race_result_detail, name="race_result_detail"),
     path('api/races/', views.race_list, name="race_list"),
     path('api/races/<int:pk>', views.race_detail, name="race_detail"),
+    path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>/demo/', views.demo, name='demo')
 ]

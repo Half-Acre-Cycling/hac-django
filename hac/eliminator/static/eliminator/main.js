@@ -1,4 +1,6 @@
-
+/**
+ * Handle Expanding rider details
+ */
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.rider').forEach((el) => {
         const header = el.querySelector('.header');
@@ -6,6 +8,48 @@ document.addEventListener("DOMContentLoaded", () => {
             if (el.classList.contains('expanded')) {
                 el.classList.replace('expanded', 'unexpanded');
             } else el.classList.replace('unexpanded', 'expanded');
+        });
+    });
+});
+
+/**
+ * Sorting and drag/drop
+ */
+const sortableList = (e) => {
+    e.preventDefault();
+    let sortZoneId;
+    if (e.target.classList.contains('sort-zone')) {
+        // target is sort zone
+        sortZoneId = e.target.id;
+    } else {
+        // target parentElement is _probably_ the sort zone
+        sortZoneId = e.target.parentElement.id;
+        // but it could also be the parent of the parent, depending on the dragover target
+        if (!sortZoneId) sortZoneId = e.target.parentElement.parentElement.id;
+    }
+    try {
+        const zone = document.querySelector(`#${sortZoneId}`);
+        const draggedRider = document.querySelector('.rider.dragging');
+        const siblingRiders = [...zone.querySelectorAll('.rider:not(.dragging)')];
+        const nextSiblingRider = siblingRiders.find((rider) => {
+            return e.clientY <= rider.offsetTop + rider.offsetHeight / 2;
+        });
+        zone.insertBefore(draggedRider, nextSiblingRider);
+    } catch (er) {
+        console.log(er);
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.sort-zone').forEach((zone) => {
+        zone.addEventListener('dragover', sortableList);
+        zone.addEventListener('dragenter', e => e.preventDefault());
+        zone.querySelectorAll('.rider').forEach((rider) => {
+            rider.addEventListener('dragstart', () => {
+                setTimeout(() => {
+                    rider.classList.add('dragging');
+                }, 0);
+            });
+            rider.addEventListener('dragend', () => rider.classList.remove('dragging'));
         });
     });
 });

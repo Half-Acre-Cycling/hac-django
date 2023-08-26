@@ -103,6 +103,21 @@ def race_scoring(request, category_id, round_id, pk):
         race_results.append(race_result)
     return render(request, 'races_scoring.html', {'round': this_round, 'race': this_race, 'category': this_category, 'race_results': race_results})
 
+def demo(request, category_id, round_id, pk):
+    this_category = Category.objects.get(id=category_id).serialize()
+    this_round = Round.objects.get(id=round_id).serialize()
+    this_race_obj = Race.objects.get(id=pk)
+    this_race = this_race_obj.serialize()
+    race_results = []
+    for athlete_obj in this_race_obj.athletes.all():
+        athlete= athlete_obj.serialize()
+        race_result, created = RaceResult.objects.get_or_create(
+            athlete=athlete_obj,
+            race=this_race_obj
+        )
+        race_results.append(race_result)
+    return render(request, 'demo.html', {'round': this_round, 'race': this_race, 'category': this_category, 'race_results': race_results})
+
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def generate_first_elim(request, category_id):
     category = Category.objects.get(id=category_id)
