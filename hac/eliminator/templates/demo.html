@@ -1,125 +1,74 @@
 {% extends 'layout.html' %}
 {% block title %}Eliminator Races{% endblock title %}
 {% block content %}
-<main>
-    <h1>Half Acre Cycling</h1>
+<main class="scoring">
     <h3>{{ category.title }} {{round.title}} {{ race.title }}</h3>
-    <a href="/categories/{{category.id}}/round/{{round.id}}">Back to Round</a>
-    <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}">Back to Race Summary</a>
     
-    <!-- placed results -->
-    <h6>Placing Results</h6>
-    <div class="sort-zone" id="placing_results">
-
+    <div class="button-container">
+        <a href="/categories/{{category.id}}/round/{{round.id}}" class="half">Back to Round</a>
+        <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}" class="half">Back to Summary</a>
+        <p class="button">Submit Scores</p>
     </div>
-    <!-- <ul class="race-list"> -->
-        <!-- {% for race_result in race_results|dictsort:'place' %}
-        {% if race_result.is_placing %}
-        <li>
-            <div>
-                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
-                    <input type="text" name="place" id="place" value="{{race_result.place}}">
-                    <input type="submit" value="Update Place">
-                </form>
+    <div class="scoring-container">
+        <div>
+            <!-- placed results -->
+            <h6>Placing Results</h6>
+            <div class="sort-zone" id="placing_results">
+                {% for race_result in race_results|dictsort:'place' %}
+                {% if race_result.is_placing %}
+                    <div class="rider" draggable="true">
+                        <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </div></div>
+        <div>
+            <!-- unplaced results -->
+            <h6>Unplaced Results</h6>
+            <!-- <ul class="race-list"> -->
+            <div class="sort-zone" id="unplaced_riders">
+                {% for race_result in race_results|dictsort:'place' %}
+                {% if race_result.place == '' %}
+                    <div class="rider" draggable="true">
+                        <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+                    </div>
+                {% endif %}
+                {% endfor %}
             </div>
-        </li>
-        {% endif %}
-        {% endfor %} -->
-    <!-- </ul> -->
-    <!-- unplaced results -->
-    <h6>Unplaced Results</h6>
-    <!-- <ul class="race-list"> -->
-    <div class="sort-zone" id="unplaced_riders">
-
-        
-        {% for race_result in race_results|dictsort:'place' %}
-        {% if race_result.place == '' %}
-            <div class="rider" draggable="true">
-                <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+            <!-- DNS -->
+            <h6>Did Not Start</h6>
+            <div class="sort-zone" id="dns_riders">
+                {% for race_result in race_results %}
+                {% if race_result.place == 'dns' %}
+                    <div class="rider" draggable="true">
+                        <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+                    </div>
+                {% endif %}
+                {% endfor %}
             </div>
-        {% endif %}
-        {% endfor %}
+            <!-- DNF -->
+            <h6>Did Not Finish</h6>
+            <div class="sort-zone" id="dnf_riders">
+                {% for race_result in race_results %}
+                {% if race_result.place == 'dnf' %}
+                    <div class="rider" draggable="true">
+                        <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <!-- DQ -->
+            <h6>Did Not Place</h6>
+            <div class="sort-zone" id="dnp_riders">
+                {% for race_result in race_results %}
+                {% if race_result.place == 'dnp' %}
+                    <div class="rider" draggable="true">
+                        <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <!-- </ul> -->
-    <!-- DNS -->
-    <!-- <h6>Did Not Start</h6>
-    <ul class="race-list">
-        {% for race_result in race_results %}
-        {% if race_result.place == 'dns' %}
-        <li>
-            <div>
-                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
-                    <input type="text" name="place" id="place" value="{{race_result.place}}">
-                    <input type="submit" value="Update Place">
-                </form>
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul> -->
-    <!-- DNF -->
-    <!-- <h6>Did Not Finish</h6>
-    <ul class="race-list">
-        {% for race_result in race_results %}
-        {% if race_result.place == 'dnf' %}
-        <li>
-            <div>
-                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
-                    <input type="text" name="place" id="place" value="{{race_result.place}}">
-                    <input type="submit" value="Update Place">
-                </form>
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul> -->
-    <!-- DQ -->
-    <!-- <h6>Disqualified</h6>
-    <ul class="race-list">
-        {% for race_result in race_results %}
-        {% if race_result.place == 'dq' %}
-        <li>
-            <div>
-                <p>{{ race_result.athlete.name }} <strong>Bib: {{race_result.athlete.bib_number}}</strong></p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
-                    <input type="text" name="place" id="place" value="{{race_result.place}}">
-                    <input type="submit" value="Update Place">
-                </form>
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul> -->
-    <!-- DNP -->
-    <!-- <h6>Did Not Place</h6>
-    <ul class="race-list">
-        {% for race_result in race_results %}
-        {% if race_result.place == 'dnp' %}
-        <li>
-            <div>
-                <p>{{ race_result.athlete.name }}</p>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="id" id="id" value="{{race_result.id}}" style="display:none;">
-                    <input type="text" name="place" id="place" value="{{race_result.place}}">
-                    <input type="submit" value="Update Place">
-                </form>
-            </div>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul> -->
-
 </main>
 {% endblock %}
