@@ -138,6 +138,7 @@ hr {
 .sort-zone {
     border: 2px solid var(--pink);
     min-height: 4em;
+    padding-bottom: 1em;
     .header::after {
         content: attr(place);
     }
