@@ -9,6 +9,7 @@ pandas = "*"
 django-environ = "*"
 django-compressor = "*"
 django-libsass = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
