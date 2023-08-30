@@ -65,6 +65,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'hac.urls'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://eliminator.halfacrecycling.org'
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
