@@ -32,7 +32,9 @@ SECRET_KEY = env.str("SECRET_KEY", default='really_super_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'eliminator.halfacrecycling.org'
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
