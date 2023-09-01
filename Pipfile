@@ -10,6 +10,9 @@ django-environ = "*"
 django-compressor = "*"
 django-libsass = "*"
 djangorestframework = "*"
+psycopg2-binary = "*"
+uvicorn = "*"
+gunicorn = "*"
 
 [dev-packages]
 
