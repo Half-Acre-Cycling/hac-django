@@ -58,7 +58,7 @@ class Round(models.Model):
 
         super().save(*args, **kwargs)
 class Race(models.Model):
-    time = models.TextField()
+    time = models.TextField(default="", blank=True)
     is_past = models.BooleanField(default=False)
     title = models.TextField()
     year = models.TextField(default="2022")

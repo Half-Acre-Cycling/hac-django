@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+{% block title %}Eliminator Races{% endblock title %}
+{% block content %}
+{% load static %}
+<script src="{% static 'eliminator/jumbotron.js' %}"></script>
+<main class="jumbotron">
+    <h1>Half Acre Cycling CX Eliminator</h1>
+    <div>
+        <div>
+            <h2>Upcoming Races</h2>
+            {% for race in races|dictsort:'time' %}
+            {% if not race.is_past and race.time  != '' %}
+            <div class="rider expanded results">
+                <div class="header">{{race.round.category.title}} {{race.round.title}} {{race.title}} Estimated for {{race.time}}</div>
+                <div class="detail">
+                    {% for athlete in race.athletes.all %}
+                        <p><strong>Bib {{athlete.bib_number}}</strong> -- {{athlete.name}}{% if athlete.team %}, {{athlete.team}} {% endif %}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="results-list">
+            <h2 id="results-identifier">Results</h2>
+            {% for category in categories %}
+            <div class="results_category" id="results_cat_{{category.id}}" category="{{category.title}}">
+            {% for round in rounds %}
+            {% if round.category == category %}
+            <div>
+                <h3>{{category.title}} {{round.title}} Round Results</h3>
+                {% for race in races %}
+                {% if race.round.category == category and race.round == round and race.is_past %}
+                <div class="rider expanded results">
+                    <div class="header">{{race.round.category.title}} {{race.round.title}}{% if 'Final' not in race.title %} {{race.title}}{% endif %}</div>
+                    <div class="detail">
+                        {% for race_result in race_results|dictsort:'place' %}
+                        {% if race_result.race == race %}
+                            <p><strong>{{ race_result.get_place_display}}</strong> Bib {{race_result.athlete.bib_number}} -- {{race_result.athlete.name}}{% if race_result.athlete.team %}, {{race_result.athlete.team}} {% endif %}</p>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    
+</main>
+{% endblock %}

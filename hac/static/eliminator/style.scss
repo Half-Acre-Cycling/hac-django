@@ -1,3 +1,290 @@
+:root {
+    --dark: #191f27;
+    --light: #e8e0d1;
+    --pink: #e3b1a5;
+}
+
 body {
-    background-color: #badA55;
+    // font-family: "Mulish", sans-serif;
+    font-family: "Nunito Sans", sans-serif;
+    // font-family: "Red Hat Display", sans-serif;
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+    position: relative;
+    background-color: var(--dark);
+    color: var(--light);
+    transition: color 0.5s, background-color 0.5s;
+}
+small {
+    font-size: 12px;
+}
+a {
+    color: var(--pink)
+}
+h6 {
+    margin-bottom: 0.25em;
+    color: var(--pink);
+}
+main {
+    max-width: 600px;
+    margin: auto;
+}
+.button-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    width: 100%;
+    >* {
+        text-align: center;
+        flex-basis: 90%;
+        display: inline-block;
+        padding: 1em;
+        margin: .5em 0;
+    }
+    >.half {
+        flex-basis: 40%;
+    }
+    label {
+        text-align: right;
+    }
+    input[type=text] {
+        padding: 0 .5em;
+        margin: 1.75em 0;
+    }
+    hr {
+        padding: 0;
+        max-width: 50%;
+    }
+}
+.button {
+    
+    color: color-mix(in srgb, var(--dark), #fff 15%);
+    background-color: var(--pink);
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    margin: .5em 0;
+    &:hover {
+        color: var(--dark);
+        background-color: color-mix(in srgb, var(--pink), #000 15%);
+    }
+}
+hr {
+    border: 2px solid var(--light);
+    margin-left: 0;
+}
+
+/**
+ * Rider Details
+ */
+.rider {
+    position: relative;
+    width: 90%;
+    margin: 0.5em auto;
+    padding: 0.5em 0;
+    max-height: 3em;
+    height: 30em;
+    transition: max-height 1s;
+    &.expandable .header::after {
+        content: '+';
+        transition: transform 0.5s;
+    }
+    .header {
+        display: flex;
+        justify-content: space-between;
+        background-color: var(--light);
+        transition: background-color 0.5s;
+        color: var(--dark);
+        padding: 1em;
+    }
+    .detail {
+        position: absolute;
+        padding: 0.5em 1em;
+        opacity: 0;
+        transition-property: opacity;
+        transition-timing-function: ease-in;
+        transition-duration: 1s;
+        transition-delay: 0.5s;
+        color: var(--dark);
+        z-index: -1;
+        a {
+            color: var(--dark);
+        }
+        p {
+            margin: 0 auto 0.3em;
+        }
+    }
+    &.expanded {
+        .header {
+            background-color: var(--pink);
+        }
+        .header::after {
+            transform: rotate(45deg);
+        }
+        .detail {
+            opacity: 1;
+            color: var(--light);
+            z-index: initial;
+            a {
+                color: var(--pink);
+            }
+        }
+        max-height: 16em;
+    }
+}
+.jumbotron {
+    max-width: initial;
+    h2 {
+        display: inline-block;
+        font-size: 48px;
+        background: linear-gradient(0deg, var(--pink) 10px, rgba(0,0,0,0) 0, rgba(0,0,0,0));
+    }
+    >div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .rider {
+        max-height: initial;
+        height: initial;
+        margin: initial;
+        .detail {
+            position: initial;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+    }
+    .results-list>div {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+/**
+ * Scoring Page
+ */
+.scoring {
+    .sort-zone {
+        min-height: 2em;
+    }
+    h3 {
+        margin-bottom: 0.25em;
+    }
+    h6 {
+        margin-top: 0.25em;
+    }
+    .button-container>* {
+        margin: 0.25em 0;
+        padding: .5em;
+    }
+    .scoring-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        >div {
+            flex-basis: 49%;
+        }
+    }
+    .rider {
+        height: initial;
+        padding: 0;
+        .header {
+            padding: .5em;
+            font-size: .75em;
+        }
+    }
+    
+}
+
+/**
+ * Sort Zone
+ */
+.sort-zone {
+    border: 2px solid var(--pink);
+    min-height: 4em;
+    padding-bottom: 1em;
+    .header::after {
+        content: attr(place);
+    }
+    .dragging {
+        background-color: var(--pink);
+    }
+}
+
+/**
+ * File uploads for categories
+ */
+.file-dropzone {
+    flex-basis: 100%;
+    background: var(--light);
+    border: 2px solid var(--pink);
+    overflow: hidden;
+    min-height: 6em;
+    position: relative;
+    &.ready {
+        background: var(--dark);
+        div {
+            color: var(--light);
+        }
+    }
+    &::after {
+        position: absolute;
+        left: 13px;
+        top: 38px;
+        font-size: 10px;
+        font-weight: bold;
+    }
+    &::before {
+        content: " ";
+        display: inline-block;
+        height: 100%;
+        width: 1%;
+        vertical-align: middle;
+    }
+    div {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 10px;
+        overflow: hidden;
+        word-break: break-all;
+        color: var(--dark)
+    }
+    // add option to wipe input
+    span {
+        position: absolute;
+        font-weight: bold;
+        right: 7.5px;
+        top: -7.5px;
+        font-size: 30px;
+        cursor: pointer;
+        z-index: 10;
+        display: none;
+        color: var(--light);
+    }
+    // visually hide the native file input field
+    input {
+        position: absolute;
+        z-index: 3;
+        display: block;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        top: 0;
+    }
+}
+
+/**
+ * MEDIA QUERIES, Larger screens
+ */
+@media screen and (min-width: 600px) {
+    .button-container {
+        >* {
+            flex-basis: 40%;
+        }
+        hr {
+            display: none;
+        }
+    }
 }

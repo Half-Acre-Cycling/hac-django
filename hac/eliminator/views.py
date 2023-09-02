@@ -30,6 +30,18 @@ def root_page(request):
     user = request.user
     return render(request, 'index.html', {'user': user})
 
+def jumbotron(request):
+    races = Race.objects.filter(year=date.today().year)
+    current_categories = Category.objects.filter(year=date.today().year)
+    rounds = Round.objects.all()
+    race_results = RaceResult.objects.all()
+    return render(request, 'jumbotron.html', {
+        'races': races,
+        'categories': current_categories,
+        'race_results': race_results,
+        'rounds': rounds
+    })
+
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def categories(request):
     current_categories = Category.objects.filter(year=date.today().year)
@@ -108,6 +120,7 @@ def race_scoring(request, category_id, round_id, pk):
         race_results.append(race_result)
     return render(request, 'races_scoring.html', {'round': this_round, 'race': this_race, 'category': this_category, 'race_results': race_results})
 
+@user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def demo(request, category_id, round_id, pk):
     if request.method == 'POST':
         placing = json.loads(request.body)

@@ -6,7 +6,7 @@ app_name = "eliminator"
 
 urlpatterns = [
     path('upload/', views.upload_page, name="upload_page"),
-    path('', views.root_page, name="root_page"),
+    path('', views.jumbotron, name="jumbotron"),
     path('categories/', views.categories, name='categories'),
     path('categories/<int:pk>', views.categories_detail, name='categories_detail'),
     path('categories/<int:category_id>/round/<int:pk>', views.rounds_detail, name='rounds_detail'),
@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/raceresults/<int:pk>', views.race_result_detail, name="race_result_detail"),
     path('api/races/', views.race_list, name="race_list"),
     path('api/races/<int:pk>', views.race_detail, name="race_detail"),
-    path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>/demo/', views.demo, name='demo')
+    path('categories/<int:category_id>/round/<int:round_id>/race/<int:pk>/demo/', views.demo, name='demo'),
+    path('staff/', views.root_page, name="root_page")
 ]
