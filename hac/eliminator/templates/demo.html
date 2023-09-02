@@ -7,8 +7,9 @@
     <div class="button-container">
         <a href="/categories/{{category.id}}/round/{{round.id}}" class="half">Back to Round</a>
         <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}" class="half">Back to Summary</a>
-        <p class="button">Submit Scores</p>
+        <p class="button" id="update_placing">Submit Scores</p>
     </div>
+    {% csrf_token %}
     <div class="scoring-container">
         <div>
             <!-- placed results -->
@@ -16,7 +17,7 @@
             <div class="sort-zone" id="placing_results">
                 {% for race_result in race_results|dictsort:'place' %}
                 {% if race_result.is_placing %}
-                    <div class="rider" draggable="true">
+                    <div class="rider" draggable="true" id="rider_{{race_result.id}}">
                         <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
                     </div>
                 {% endif %}
@@ -29,7 +30,7 @@
             <div class="sort-zone" id="unplaced_riders">
                 {% for race_result in race_results|dictsort:'place' %}
                 {% if race_result.place == '' %}
-                    <div class="rider" draggable="true">
+                    <div class="rider" draggable="true" id="rider_{{race_result.id}}">
                         <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
                     </div>
                 {% endif %}
@@ -40,7 +41,7 @@
             <div class="sort-zone" id="dns_riders">
                 {% for race_result in race_results %}
                 {% if race_result.place == 'dns' %}
-                    <div class="rider" draggable="true">
+                    <div class="rider" draggable="true" id="rider_{{race_result.id}}">
                         <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
                     </div>
                 {% endif %}
@@ -51,7 +52,7 @@
             <div class="sort-zone" id="dnf_riders">
                 {% for race_result in race_results %}
                 {% if race_result.place == 'dnf' %}
-                    <div class="rider" draggable="true">
+                    <div class="rider" draggable="true" id="rider_{{race_result.id}}">
                         <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
                     </div>
                 {% endif %}
@@ -62,7 +63,7 @@
             <div class="sort-zone" id="dnp_riders">
                 {% for race_result in race_results %}
                 {% if race_result.place == 'dnp' %}
-                    <div class="rider" draggable="true">
+                    <div class="rider" draggable="true" id="rider_{{race_result.id}}">
                         <div class="header">{{race_result.athlete.bib_number}} - {{race_result.athlete.name}}</div>
                     </div>
                 {% endif %}

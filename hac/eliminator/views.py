@@ -1,4 +1,5 @@
 from datetime import date
+import json
 # import openpyxl
 import pandas as pd
 import io
@@ -104,6 +105,23 @@ def race_scoring(request, category_id, round_id, pk):
     return render(request, 'races_scoring.html', {'round': this_round, 'race': this_race, 'category': this_category, 'race_results': race_results})
 
 def demo(request, category_id, round_id, pk):
+    if request.method == 'POST':
+        placing = json.loads(request.body)
+        for classification in placing.keys():
+            is_placing = False
+            if classification == 'placing_results':
+                is_placing = True
+            for idx, id in enumerate(placing[classification]):
+                result = RaceResult.objects.get(id=id)
+                place = idx + 1
+                if is_placing:
+                    result.place = place
+                elif classification == 'unplaced_riders':
+                    result.place = ''
+                else:
+                    result.place = classification.split('_')[0]
+                result.is_placing = is_placing
+                result.save() 
     this_category = Category.objects.get(id=category_id).serialize()
     this_round = Round.objects.get(id=round_id).serialize()
     this_race_obj = Race.objects.get(id=pk)
