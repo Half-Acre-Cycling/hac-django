@@ -58,6 +58,8 @@ class Round(models.Model):
 
         super().save(*args, **kwargs)
 class Race(models.Model):
+    time = models.TextField()
+    is_past = models.BooleanField(default=False)
     title = models.TextField()
     year = models.TextField(default="2022")
     round = models.ForeignKey(Round, on_delete=models.CASCADE)

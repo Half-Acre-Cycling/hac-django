@@ -77,6 +77,10 @@ def rounds_detail(request, category_id, pk):
 
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login/')
 def races_detail(request, category_id, round_id, pk):
+    if request.method == 'POST':
+        race = Race.objects.get(id=request.POST['id'])
+        race.time = request.POST['time']
+        race.save()
     this_category = Category.objects.get(id=category_id).serialize()
     this_round = Round.objects.get(id=round_id).serialize()
     this_race = Race.objects.get(id=pk).serialize()
@@ -116,6 +120,10 @@ def demo(request, category_id, round_id, pk):
                 place = idx + 1
                 if is_placing:
                     result.place = place
+                    if idx == 0:
+                        race = result.race
+                        race.is_past = True
+                        race.save()
                 elif classification == 'unplaced_riders':
                     result.place = ''
                 else:

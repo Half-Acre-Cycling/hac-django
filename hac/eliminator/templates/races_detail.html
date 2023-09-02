@@ -11,6 +11,13 @@
     <h3>{{ category.title }} {{round.title}} {{ race.title }}</h3>
     <a href="/categories/{{category.id}}/round/{{round.id}}">Back to Round</a>
     <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}/scoring">Enter Scoring</a>
+    <a href="/categories/{{category.id}}/round/{{round.id}}/race/{{race.id}}/demo">Drag/Drop</a>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="text" name="time" id="time" value="{{race.time}}">
+        <input type="hidden" name="id" id="id" value="{{race.id}}">
+        <input type="submit" value="Update Time">
+    </form>
     <ul class="race_list">
         {% for athlete in race.athletes %}
         <li>
